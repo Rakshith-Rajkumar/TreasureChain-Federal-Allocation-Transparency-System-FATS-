@@ -3,6 +3,7 @@ version: '3'
 networks:
   fabric:
     driver: bridge
+    attachable: true
 
 services:
   orderer.treasury.gov:
