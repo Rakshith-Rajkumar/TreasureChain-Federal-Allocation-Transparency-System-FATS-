@@ -1,0 +1,48 @@
+OrdererOrgs:
+  - Name: Orderer
+    Domain: treasury.gov
+    Specs:
+      - Hostname: orderer
+PeerOrgs:
+  - Name: Treasury
+    Domain: treasury.gov
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+  - Name: HHS
+    Domain: hhs.gov
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+  - Name: DoD
+    Domain: dod.gov
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+  - Name: Education
+    Domain: ed.gov
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+  - Name: SSA
+    Domain: ssa.gov
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+  - Name: IRS
+    Domain: irs.gov
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+  - Name: DOT
+    Domain: dot.gov
+    Template:
+      Count: 1
+    Users:
+      Count: 1

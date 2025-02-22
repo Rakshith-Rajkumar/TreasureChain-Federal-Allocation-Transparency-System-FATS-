@@ -1,0 +1,231 @@
+version: '3'
+
+networks:
+  fabric:
+    driver: bridge
+
+services:
+  orderer.treasury.gov:
+    image: hyperledger/fabric-orderer:2.5
+    container_name: orderer_treasury
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_BOOTSTRAPFILE=/etc/hyperledger/fabric/genesis.block
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/msp/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/msp/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/msp/orderer/tls/ca.crt]
+    volumes:
+      - "../artifacts/genesis.block:/etc/hyperledger/fabric/genesis.block"
+      - "./crypto-config/ordererOrganizations/treasury.gov/orderers/orderer.treasury.gov:/etc/hyperledger/msp/orderer"
+      - "./config/core.yaml:/etc/hyperledger/fabric/core.yaml"
+      - "../artifacts:/artifacts"
+    ports:
+      - "7050:7050"
+    networks:
+      - fabric
+
+  peer0.treasury.gov:
+    image: hyperledger/fabric-peer:2.5
+    container_name: peer0_treasury
+    command: peer node start
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric
+      - CORE_PEER_ID=peer0.treasury.gov
+      - CORE_PEER_ADDRESS=peer0.treasury.gov:7051
+      - CORE_PEER_LOCALMSPID=TreasuryMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.treasury.gov:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.treasury.gov:7051
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+    volumes:
+      - "./crypto-config/peerOrganizations/treasury.gov/peers/peer0.treasury.gov/msp:/etc/hyperledger/msp/peer"
+      - "./crypto-config/peerOrganizations/treasury.gov/peers/peer0.treasury.gov/tls:/etc/hyperledger/fabric/tls"
+      - "./config/core.yaml:/etc/hyperledger/fabric/core.yaml"
+      - "../artifacts:/artifacts"
+      - "/var/run/docker.sock:/var/run/docker.sock"  # Added for chaincode execution
+    ports:
+      - "7051:7051"
+    depends_on:
+      - orderer.treasury.gov
+    networks:
+      - fabric
+
+  peer0.hhs.gov:
+    image: hyperledger/fabric-peer:2.5
+    container_name: peer0_hhs
+    command: peer node start
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric
+      - CORE_PEER_ID=peer0.hhs.gov
+      - CORE_PEER_ADDRESS=peer0.hhs.gov:8051
+      - CORE_PEER_LOCALMSPID=HHSMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.hhs.gov:8051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.hhs.gov:8051
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+    volumes:
+      - "./crypto-config/peerOrganizations/hhs.gov/peers/peer0.hhs.gov/msp:/etc/hyperledger/msp/peer"
+      - "./crypto-config/peerOrganizations/hhs.gov/peers/peer0.hhs.gov/tls:/etc/hyperledger/fabric/tls"
+      - "./config/core.yaml:/etc/hyperledger/fabric/core.yaml"
+      - "../artifacts:/artifacts"
+      - "/var/run/docker.sock:/var/run/docker.sock"  # Added for chaincode execution
+    ports:
+      - "8051:8051"
+    depends_on:
+      - orderer.treasury.gov
+    networks:
+      - fabric
+
+  peer0.dod.gov:
+    image: hyperledger/fabric-peer:2.5
+    container_name: peer0_dod
+    command: peer node start
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric
+      - CORE_PEER_ID=peer0.dod.gov
+      - CORE_PEER_ADDRESS=peer0.dod.gov:9051
+      - CORE_PEER_LOCALMSPID=DoDMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.dod.gov:9051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.dod.gov:9051
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+    volumes:
+      - "./crypto-config/peerOrganizations/dod.gov/peers/peer0.dod.gov/msp:/etc/hyperledger/msp/peer"
+      - "./crypto-config/peerOrganizations/dod.gov/peers/peer0.dod.gov/tls:/etc/hyperledger/fabric/tls"
+      - "./config/core.yaml:/etc/hyperledger/fabric/core.yaml"
+      - "../artifacts:/artifacts"
+      - "/var/run/docker.sock:/var/run/docker.sock"  # Added for chaincode execution
+    ports:
+      - "9051:9051"
+    depends_on:
+      - orderer.treasury.gov
+    networks:
+      - fabric
+
+  peer0.ed.gov:
+    image: hyperledger/fabric-peer:2.5
+    container_name: peer0_ed
+    command: peer node start
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric
+      - CORE_PEER_ID=peer0.ed.gov
+      - CORE_PEER_ADDRESS=peer0.ed.gov:10051
+      - CORE_PEER_LOCALMSPID=EducationMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.ed.gov:10051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.ed.gov:10051
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+    volumes:
+      - "./crypto-config/peerOrganizations/ed.gov/peers/peer0.ed.gov/msp:/etc/hyperledger/msp/peer"
+      - "./crypto-config/peerOrganizations/ed.gov/peers/peer0.ed.gov/tls:/etc/hyperledger/fabric/tls"
+      - "./config/core.yaml:/etc/hyperledger/fabric/core.yaml"
+      - "../artifacts:/artifacts"
+      - "/var/run/docker.sock:/var/run/docker.sock"  # Added for chaincode execution
+    ports:
+      - "10051:10051"
+    depends_on:
+      - orderer.treasury.gov
+    networks:
+      - fabric
+
+  peer0.ssa.gov:
+    image: hyperledger/fabric-peer:2.5
+    container_name: peer0_ssa
+    command: peer node start
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric
+      - CORE_PEER_ID=peer0.ssa.gov
+      - CORE_PEER_ADDRESS=peer0.ssa.gov:11051
+      - CORE_PEER_LOCALMSPID=SSAMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.ssa.gov:11051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.ssa.gov:11051
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+    volumes:
+      - "./crypto-config/peerOrganizations/ssa.gov/peers/peer0.ssa.gov/msp:/etc/hyperledger/msp/peer"
+      - "./crypto-config/peerOrganizations/ssa.gov/peers/peer0.ssa.gov/tls:/etc/hyperledger/fabric/tls"
+      - "./config/core.yaml:/etc/hyperledger/fabric/core.yaml"
+      - "../artifacts:/artifacts"
+      - "/var/run/docker.sock:/var/run/docker.sock"  # Added for chaincode execution
+    ports:
+      - "11051:11051"
+    depends_on:
+      - orderer.treasury.gov
+    networks:
+      - fabric
+
+  peer0.irs.gov:
+    image: hyperledger/fabric-peer:2.5
+    container_name: peer0_irs
+    command: peer node start
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric
+      - CORE_PEER_ID=peer0.irs.gov
+      - CORE_PEER_ADDRESS=peer0.irs.gov:12051
+      - CORE_PEER_LOCALMSPID=IRSMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.irs.gov:12051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.irs.gov:12051
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+    volumes:
+      - "./crypto-config/peerOrganizations/irs.gov/peers/peer0.irs.gov/msp:/etc/hyperledger/msp/peer"
+      - "./crypto-config/peerOrganizations/irs.gov/peers/peer0.irs.gov/tls:/etc/hyperledger/fabric/tls"
+      - "./config/core.yaml:/etc/hyperledger/fabric/core.yaml"
+      - "../artifacts:/artifacts"
+      - "/var/run/docker.sock:/var/run/docker.sock"  # Added for chaincode execution
+    ports:
+      - "12051:12051"
+    depends_on:
+      - orderer.treasury.gov
+    networks:
+      - fabric
+
+  peer0.dot.gov:
+    image: hyperledger/fabric-peer:2.5
+    container_name: peer0_dot
+    command: peer node start
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric
+      - CORE_PEER_ID=peer0.dot.gov
+      - CORE_PEER_ADDRESS=peer0.dot.gov:13051
+      - CORE_PEER_LOCALMSPID=DOTMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.dot.gov:13051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.dot.gov:13051
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+    volumes:
+      - "./crypto-config/peerOrganizations/dot.gov/peers/peer0.dot.gov/msp:/etc/hyperledger/msp/peer"
+      - "./crypto-config/peerOrganizations/dot.gov/peers/peer0.dot.gov/tls:/etc/hyperledger/fabric/tls"
+      - "./config/core.yaml:/etc/hyperledger/fabric/core.yaml"
+      - "../artifacts:/artifacts"
+      - "/var/run/docker.sock:/var/run/docker.sock"  # Added for chaincode execution
+    ports:
+      - "13051:13051"
+    depends_on:
+      - orderer.treasury.gov
+    networks:
+      - fabric

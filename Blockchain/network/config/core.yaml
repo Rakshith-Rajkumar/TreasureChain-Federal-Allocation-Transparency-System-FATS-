@@ -1,0 +1,29 @@
+# config/core.yaml
+peer:
+  id: generic-peer
+  address: 0.0.0.0:7051
+  localMspId: TreasuryMSP # Overridden by CORE_PEER_LOCALMSPID
+  listenAddress: 0.0.0.0:7051
+  chaincodeListenAddress: 0.0.0.0:7052
+  tls:
+    enabled: true
+    clientAuthRequired: false
+    rootcert.file: /etc/hyperledger/fabric/tls/ca.crt
+    cert.file: /etc/hyperledger/fabric/tls/server.crt
+    key.file: /etc/hyperledger/fabric/tls/server.key
+  fileSystemPath: /var/hyperledger/production
+  BCCSP:
+    Default: SW
+    SW:
+      Hash: SHA2
+      Security: 256
+      FileKeyStore:
+        KeyStore: /etc/hyperledger/msp/peer/keystore
+vm:
+  endpoint: unix:///var/run/docker.sock
+  docker:
+    attachStdout: true
+    hostConfig:
+      NetworkMode: fabric
+logging:
+  level: info

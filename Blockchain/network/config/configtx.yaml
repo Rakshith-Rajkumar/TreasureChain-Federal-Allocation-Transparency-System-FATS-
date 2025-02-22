@@ -1,0 +1,227 @@
+Organizations:
+  - &OrdererOrg
+    Name: OrdererMSP
+    ID: OrdererMSP
+    MSPDir: ../crypto-config/ordererOrganizations/treasury.gov/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('OrdererMSP.admin')"
+  - &TreasuryOrg
+    Name: TreasuryMSP
+    ID: TreasuryMSP
+    MSPDir: ../crypto-config/peerOrganizations/treasury.gov/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('TreasuryMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('TreasuryMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('TreasuryMSP.admin')"
+    AnchorPeers:
+      - Host: peer0.treasury.gov
+        Port: 7051
+  - &HHSOrg
+    Name: HHSMSP
+    ID: HHSMSP
+    MSPDir: ../crypto-config/peerOrganizations/hhs.gov/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('HHSMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('HHSMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('HHSMSP.admin')"
+    AnchorPeers:
+      - Host: peer0.hhs.gov
+        Port: 8051
+  - &DoDOrg
+    Name: DoDMSP
+    ID: DoDMSP
+    MSPDir: ../crypto-config/peerOrganizations/dod.gov/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('DoDMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('DoDMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('DoDMSP.admin')"
+    AnchorPeers:
+      - Host: peer0.dod.gov
+        Port: 9051
+  - &EducationOrg
+    Name: EducationMSP
+    ID: EducationMSP
+    MSPDir: ../crypto-config/peerOrganizations/ed.gov/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('EducationMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('EducationMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('EducationMSP.admin')"
+    AnchorPeers:
+      - Host: peer0.ed.gov
+        Port: 10051
+  - &SSAOrg
+    Name: SSAMSP
+    ID: SSAMSP
+    MSPDir: ../crypto-config/peerOrganizations/ssa.gov/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('SSAMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('SSAMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('SSAMSP.admin')"
+    AnchorPeers:
+      - Host: peer0.ssa.gov
+        Port: 11051
+  - &IRSOrg
+    Name: IRSMSP
+    ID: IRSMSP
+    MSPDir: ../crypto-config/peerOrganizations/irs.gov/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('IRSMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('IRSMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('IRSMSP.admin')"
+    AnchorPeers:
+      - Host: peer0.irs.gov
+        Port: 12051
+  - &DOTOrg
+    Name: DOTMSP
+    ID: DOTMSP
+    MSPDir: ../crypto-config/peerOrganizations/dot.gov/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('DOTMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('DOTMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('DOTMSP.admin')"
+    AnchorPeers:
+      - Host: peer0.dot.gov
+        Port: 13051
+
+Capabilities:
+  Channel: &ChannelCapabilities
+    V2_0: true
+  Orderer: &OrdererCapabilities
+    V2_0: true
+  Application: &ApplicationCapabilities
+    V2_0: true
+
+Orderer: &OrdererDefaults
+  OrdererType: solo
+  Addresses:
+    - orderer.treasury.gov:7050
+  BatchTimeout: 2s
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 99 MB
+    PreferredMaxBytes: 512 KB
+  Organizations:
+
+Profiles:
+  MultiOrgOrdererGenesis:
+    Policies:
+      Readers:
+        Type: ImplicitMeta
+        Rule: "ANY Readers"
+      Writers:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+      Admins:
+        Type: ImplicitMeta
+        Rule: "MAJORITY Admins"
+    Capabilities: *ChannelCapabilities
+    Orderer:
+      <<: *OrdererDefaults
+      Capabilities: *OrdererCapabilities  # Added this line
+      Organizations:
+        - *OrdererOrg
+      Policies:
+        Readers:
+          Type: ImplicitMeta
+          Rule: "ANY Readers"
+        Writers:
+          Type: ImplicitMeta
+          Rule: "ANY Writers"
+        Admins:
+          Type: ImplicitMeta
+          Rule: "MAJORITY Admins"
+        BlockValidation:
+          Type: ImplicitMeta
+          Rule: "ANY Writers"
+    Consortiums:
+      TreasuryConsortium:
+        Organizations:
+          - *TreasuryOrg
+          - *HHSOrg
+          - *DoDOrg
+          - *EducationOrg
+          - *SSAOrg
+          - *IRSOrg
+          - *DOTOrg
+  TreasuryChannel:
+    Policies:
+      Readers:
+        Type: ImplicitMeta
+        Rule: "ANY Readers"
+      Writers:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+      Admins:
+        Type: ImplicitMeta
+        Rule: "MAJORITY Admins"
+    Consortium: TreasuryConsortium
+    Application:
+      Capabilities: *ApplicationCapabilities
+      Organizations:
+        - *TreasuryOrg
+        - *HHSOrg
+        - *DoDOrg
+        - *EducationOrg
+        - *SSAOrg
+        - *IRSOrg
+        - *DOTOrg
+      Policies:
+        Readers:
+          Type: ImplicitMeta
+          Rule: "ANY Readers"
+        Writers:
+          Type: ImplicitMeta
+          Rule: "ANY Writers"
+        Admins:
+          Type: ImplicitMeta
+          Rule: "MAJORITY Admins"
