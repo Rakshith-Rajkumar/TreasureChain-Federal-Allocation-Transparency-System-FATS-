@@ -9,4 +9,7 @@ export class CreateTransactionDto {
 
   @ApiProperty()
   status: string;
+
+  @ApiProperty()
+  categoryId: string;
 }

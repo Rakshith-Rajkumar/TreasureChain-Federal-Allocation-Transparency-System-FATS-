@@ -15,6 +15,31 @@
         ]
       }
     },
+    "/transactions/createCategory": {
+      "post": {
+        "operationId": "TransactionsController_createCategory",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Create a new category",
+        "tags": [
+          "transactions"
+        ]
+      }
+    },
     "/transactions/create": {
       "post": {
         "operationId": "TransactionsController_create",
@@ -270,6 +295,17 @@
   "servers": [],
   "components": {
     "schemas": {
+      "CreateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
       "CreateTransactionDto": {
         "type": "object",
         "properties": {
@@ -281,12 +317,16 @@
           },
           "status": {
             "type": "string"
+          },
+          "categoryId": {
+            "type": "string"
           }
         },
         "required": [
           "amount",
           "category",
-          "status"
+          "status",
+          "categoryId"
         ]
       },
       "UpdateTransactionDto": {
