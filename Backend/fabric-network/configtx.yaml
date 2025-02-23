@@ -1,0 +1,229 @@
+Organizations:
+  - &OrdererOrg
+    Name: OrdererOrg
+    ID: OrdererMSP
+    MSPDir: crypto-config/ordererOrganizations/treasury.gov/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('OrdererMSP.admin')"
+
+  - &TreasuryOrg
+    Name: TreasuryMSP
+    ID: TreasuryMSP
+    MSPDir: crypto-config/peerOrganizations/treasury.gov/msp
+    AnchorPeers:
+      - Host: peer0.treasury.gov
+        Port: 7051
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('TreasuryMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('TreasuryMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('TreasuryMSP.admin')"
+
+  - &TransportationOrg
+    Name: TransportationMSP
+    ID: TransportationMSP
+    MSPDir: crypto-config/peerOrganizations/transportation.gov/msp
+    AnchorPeers:
+      - Host: peer0.transportation.gov
+        Port: 8051
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('TransportationMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('TransportationMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('TransportationMSP.admin')"
+
+  - &EducationOrg
+    Name: EducationMSP
+    ID: EducationMSP
+    MSPDir: crypto-config/peerOrganizations/education.gov/msp
+    AnchorPeers:
+      - Host: peer0.education.gov
+        Port: 9051
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('EducationMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('EducationMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('EducationMSP.admin')"
+
+  - &DefenseOrg
+    Name: DefenseMSP
+    ID: DefenseMSP
+    MSPDir: crypto-config/peerOrganizations/defense.gov/msp
+    AnchorPeers:
+      - Host: peer0.defense.gov
+        Port: 10051
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('DefenseMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('DefenseMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('DefenseMSP.admin')"
+
+  - &AviationOrg
+    Name: AviationMSP
+    ID: AviationMSP
+    MSPDir: crypto-config/peerOrganizations/aviation.gov/msp
+    AnchorPeers:
+      - Host: peer0.aviation.gov
+        Port: 11051
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('AviationMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('AviationMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('AviationMSP.admin')"
+
+  - &BiodiversityOrg
+    Name: BioDiversityMSP
+    ID: BioDiversityMSP
+    MSPDir: crypto-config/peerOrganizations/biodiversity.gov/msp
+    AnchorPeers:
+      - Host: peer0.biodiversity.gov
+        Port: 12051
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('BioDiversityMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('BioDiversityMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('BioDiversityMSP.admin')"
+
+  - &ExternalAffairsOrg
+    Name: ExternalAffairsMSP
+    ID: ExternalAffairsMSP
+    MSPDir: crypto-config/peerOrganizations/externalaffairs.gov/msp
+    AnchorPeers:
+      - Host: peer0.externalaffairs.gov
+        Port: 13051
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('ExternalAffairsMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('ExternalAffairsMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('ExternalAffairsMSP.admin')"
+
+Application: &ApplicationDefaults
+    Organizations:
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        LifecycleEndorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+        Endorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+
+Orderer: &OrdererDefaults
+  OrdererType: solo
+  Addresses:
+    - orderer.treasury.gov:7050
+  BatchTimeout: 2s
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 99 MB
+    PreferredMaxBytes: 512 KB
+  Organizations:
+    - *OrdererOrg
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    BlockValidation:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+
+Channel: &ChannelDefaults
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+
+Profiles:
+  OrdererGenesis:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations:
+        - *OrdererOrg
+    Consortiums:
+      SampleConsortium:
+        Organizations:
+          - *TreasuryOrg
+          - *TransportationOrg
+          - *EducationOrg
+          - *DefenseOrg
+          - *AviationOrg
+          - *BiodiversityOrg
+          - *ExternalAffairsOrg
+
+  MyChannel:
+    Consortium: SampleConsortium
+    <<: *ChannelDefaults
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *TreasuryOrg
+        - *TransportationOrg
+        - *EducationOrg
+        - *DefenseOrg
+        - *AviationOrg
+        - *BiodiversityOrg
+        - *ExternalAffairsOrg

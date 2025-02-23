@@ -1,0 +1,55 @@
+OrdererOrgs:
+  - Name: Orderer
+    Domain: treasury.gov
+    Specs:
+      - Hostname: orderer
+
+PeerOrgs:
+  - Name: Treasury
+    Domain: treasury.gov
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+
+  - Name: Transportation
+    Domain: transportation.gov
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+
+  - Name: Education
+    Domain: education.gov
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+
+  - Name: Defense
+    Domain: defense.gov
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+
+  - Name: Aviation
+    Domain: aviation.gov
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+
+  - Name: BioDiversity
+    Domain: biodiversity.gov
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+
+  - Name: ExternalAffairs
+    Domain: externalaffairs.gov
+    Template:
+      Count: 1
+    Users:
+      Count: 1
