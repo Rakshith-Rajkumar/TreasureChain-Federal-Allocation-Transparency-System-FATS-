@@ -1,0 +1,12 @@
+[
+  {
+    "transactionId": "txn-001",
+    "isFraudulent": false,
+    "riskScore": 0.2
+  },
+  {
+    "transactionId": "txn-002",
+    "isFraudulent": true,
+    "riskScore": 0.9
+  }
+]
