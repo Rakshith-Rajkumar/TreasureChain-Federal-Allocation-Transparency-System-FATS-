@@ -6,42 +6,49 @@ OrdererOrgs:
 PeerOrgs:
   - Name: Treasury
     Domain: treasury.gov
+    EnableNodeOUs: true
     Template:
       Count: 1
     Users:
       Count: 1
   - Name: HHS
     Domain: hhs.gov
+    EnableNodeOUs: true
     Template:
       Count: 1
     Users:
       Count: 1
   - Name: DoD
     Domain: dod.gov
+    EnableNodeOUs: true
     Template:
       Count: 1
     Users:
       Count: 1
   - Name: Education
     Domain: ed.gov
+    EnableNodeOUs: true
     Template:
       Count: 1
     Users:
       Count: 1
   - Name: SSA
     Domain: ssa.gov
+    EnableNodeOUs: true
     Template:
       Count: 1
     Users:
       Count: 1
   - Name: IRS
     Domain: irs.gov
+    EnableNodeOUs: true
     Template:
       Count: 1
     Users:
       Count: 1
   - Name: DOT
     Domain: dot.gov
+    EnableNodeOUs: true
     Template:
       Count: 1
     Users:
