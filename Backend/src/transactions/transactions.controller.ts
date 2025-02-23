@@ -2,12 +2,20 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { CreateCategoryDto } from './dto/create-category.dto';
 import { ApiTags, ApiOperation, ApiParam, ApiBody } from '@nestjs/swagger';
 
 @ApiTags('transactions')
 @Controller('transactions')
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
+
+  @Post('createCategory')
+  @ApiOperation({ summary: 'Create a new category' })
+  @ApiBody({ type: CreateCategoryDto })
+  createCategory(@Body() createCategoryDto: CreateCategoryDto) {
+    return this.transactionsService.createCategory(createCategoryDto);
+  }
 
   @Post('create')
   @ApiOperation({ summary: 'Create a new transaction' })
